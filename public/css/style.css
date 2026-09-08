@@ -1,0 +1,198 @@
+/* Estilos base — "Esto con Franco sí pasaba"
+   Tipografía: se usan fuentes de sistema como aproximación inicial.
+   Cuando se disponga del archivo de fuente real del diseño, añadirlo en
+   public/assets/fonts/ y declarar un @font-face aquí, sustituyendo
+   --font-display sin tocar el resto de la hoja de estilos. */
+
+:root {
+  --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+  --font-body: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --color-bg: #ffffff;
+  --color-header-bg: #d9d9d9;
+  --color-header-text: #7a7a7a;
+  --color-text: #111111;
+  --color-muted: #6b6b6b;
+  --color-border: #cfcfcf;
+
+  --color-yellow: #f2f42e;
+  --color-selected-bg: #000000;
+  --color-selected-text: #ffffff;
+
+  --color-error-bg: #ff5a33;
+  --color-warning-bg: #f2f42e;
+
+  --color-surveillance-bg: #f2f42e;
+  --color-blue: #4d9bff;
+  --color-stamp-red: #e8391c;
+  --color-check-green: #3dbb4b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.screen {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.screen.is-active {
+  display: flex;
+}
+
+.screen__header {
+  flex: 0 0 auto;
+  background: var(--color-header-bg);
+  color: var(--color-header-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem 2rem;
+}
+
+.screen__header-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin: 0;
+}
+
+.screen__header-counter {
+  font-family: var(--font-display);
+  font-size: 2rem;
+}
+
+.screen__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen__title {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin: 1rem 0 0.5rem;
+}
+
+.screen__subtitle {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  margin: 0 0 1.5rem;
+}
+
+.screen__footer {
+  flex: 0 0 auto;
+}
+
+.cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: none;
+  background: var(--color-yellow);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  padding: 1.2rem 2rem;
+  text-align: left;
+}
+
+.cta-button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.cta-button__arrow {
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 1rem 0;
+}
+
+/* El atributo "hidden" debe ganar siempre, aunque la clase de arriba
+   diga "display: flex". Sin esta regla, un bloque "oculto" seguiría
+   viéndose igualmente. */
+.option-list[hidden] {
+  display: none;
+}
+
+.option-button {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  padding: 1.1rem 1.5rem;
+  text-align: center;
+}
+
+.option-button.is-selected {
+  background: var(--color-selected-bg);
+  color: var(--color-selected-text);
+  border-color: var(--color-selected-bg);
+}
+
+/* Overlay modal ("¡Error!" / "¡Precaución!"). Es directamente la imagen
+   exportada de Figma (ya incluye su propio fondo con degradado), a
+   pantalla completa. Tocar en cualquier parte la cierra (ver app.js). */
+.regime-modal-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  z-index: 50;
+}
+
+.regime-modal-overlay.is-active {
+  display: block;
+}
+
+.regime-modal-overlay__imagen {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+}

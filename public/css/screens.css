@@ -1,0 +1,214 @@
+/* Estilos específicos de cada pantalla de la primera estación. */
+
+/* Pantallas hechas a partir de una captura de Figma (idioma, género,
+   preguntas de Sí/No y privacidad), con botones invisibles colocados
+   encima en el sitio exacto de cada opción. El tamaño y la posición de
+   cada botón se pasan por HTML (estilo en línea), en porcentaje, para
+   que encajen siempre encima de la imagen aunque cambie el tamaño de la
+   pantalla. El contenedor mantiene siempre la proporción del diseño
+   original (1080 × 1920) para que los porcentajes cuadren con la imagen. */
+.pantalla-imagen {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1080 / 1920;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.pantalla-imagen__fondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Imagen de la opción "seleccionada" (la misma caja negra que se ve en
+   Figma, ya exportada). Cubre toda la pantalla como el fondo, pero solo
+   tiene dibujada la casilla que corresponde; el resto es transparente.
+   Se muestra u oculta según lo que haya elegido la persona. */
+.pantalla-imagen__estado {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none; /* el toque lo recoge el botón invisible de encima */
+}
+
+.pantalla-imagen__estado[hidden] {
+  display: none;
+}
+
+.pantalla-imagen__boton {
+  position: absolute;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Tapa semitransparente sobre "Siguiente" mientras no se puede continuar
+   (todavía no se ha elegido ninguna opción). */
+.pantalla-imagen__boton.esta-desactivado {
+  background: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+/* PANTALLA 04 — Acciones cotidianas (selección múltiple).
+   Se coloca encima de la imagen de fondo, en el hueco libre que deja
+   (la posición exacta —top/left/right— se pasa por HTML en línea). */
+.actions-grid {
+  position: absolute;
+  bottom: 12%; /* deja sitio para no tapar el botón "Siguiente" */
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.7rem;
+  overflow-y: auto;
+}
+
+.action-chip {
+  flex: 0 0 auto;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.9rem 1.2rem;
+  white-space: nowrap;
+}
+
+.action-chip.is-selected {
+  background: var(--color-selected-bg);
+  color: var(--color-selected-text);
+  border-color: var(--color-selected-bg);
+}
+
+/* PANTALLA 03 — Año de nacimiento (selector tipo rueda) */
+.year-picker {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  overflow: hidden;
+}
+
+.year-picker__option {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--color-border);
+  padding: 0.4rem 0;
+}
+
+.year-picker__option.is-current {
+  font-size: 2.3rem;
+  font-weight: bold;
+  color: var(--color-text);
+  background: var(--color-yellow);
+  border: 1px solid var(--color-text);
+  padding: 0.5rem 3rem;
+}
+
+/* Pregunta de escala (privacidad) */
+.scale-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 1rem 0;
+}
+
+/* Igual que en .option-list: que "hidden" siempre gane. */
+.scale-list[hidden] {
+  display: none;
+}
+
+/* Efecto "cuando alguien mira": aviso de vigilancia sobre la pregunta de
+   privacidad. Disparado por app.js tras un tiempo simulado en pantalla,
+   a falta de detección real por visión por computador. */
+.screen.is-watched {
+  box-shadow: inset 0 0 0 8px var(--color-error-bg);
+  animation: watched-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes watched-pulse {
+  0%, 100% { box-shadow: inset 0 0 0 8px rgba(255, 90, 51, 0.9); }
+  50% { box-shadow: inset 0 0 0 14px rgba(255, 90, 51, 0.5); }
+}
+
+/* Pantalla de evaluación — "Comunicado Oficial" */
+#screen-evaluation .screen__body {
+  background: radial-gradient(circle at 50% 30%, #f4f4f4 0%, #dcdcdc 100%);
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.comunicado-badge {
+  background: #ffffff;
+  padding: 0.6rem 1.2rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.comunicado-photo {
+  position: relative;
+  width: 60%;
+  max-width: 260px;
+  aspect-ratio: 3 / 4;
+  background: #cfcfcf;
+  border: 1px solid #b8b8b8;
+  margin: 1.5rem auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comunicado-photo video,
+.comunicado-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comunicado-photo__stamp {
+  position: absolute;
+  color: var(--color-stamp-red);
+  font-family: var(--font-display);
+  font-weight: bold;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  transform: rotate(-35deg);
+  border-top: 2px solid var(--color-stamp-red);
+  border-bottom: 2px solid var(--color-stamp-red);
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
+.comunicado-progress {
+  width: 100%;
+  display: flex;
+  height: 3.5rem;
+  border: 1px solid var(--color-border);
+}
+
+.comunicado-progress__fill {
+  background: var(--color-yellow);
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  transition: width 0.2s linear;
+}
+
+.comunicado-progress__rest {
+  background: var(--color-header-bg);
+  flex: 1;
+}

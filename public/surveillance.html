@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Esto con Franco sí pasaba — Ver, oír y chivar</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/surveillance.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Estado en reposo: nadie está haciendo el cuestionario todavía.
+       La webcam está encendida de fondo todo el rato; el binocular de la
+       imagen tiene un hueco transparente por el que se ve la cámara. -->
+  <section class="screen is-active" id="surveillance-idle">
+    <video id="surveillance-video-reposo" class="surveillance-video-fondo" autoplay muted playsinline></video>
+    <img class="surveillance-idle__imagen" src="assets/images/pantalla-espera.png" alt="La Pedagogía del Terror — Ver, oír y chivar">
+  </section>
+
+  <!-- Estado activo: expediente en construcción ("Las paredes oyen").
+       El vídeo de la webcam ocupa todo el fondo de la pantalla, y el
+       texto del expediente se muestra encima, en una capa transparente. -->
+  <section class="screen" id="surveillance-active">
+    <video id="surveillance-video" class="surveillance-video-fondo" autoplay muted playsinline></video>
+
+    <div class="surveillance-overlay">
+      <header class="surveillance-header">
+        <h1 class="surveillance-header__title">“Las paredes oyen”</h1>
+      </header>
+      <div class="surveillance-body">
+        <div class="surveillance-stamp-row">
+          <span class="surveillance-stamp">SUJETO SOSPECHOSO</span>
+          <span class="surveillance-registro">REGISTRO Nº: <span id="surveillance-numero"></span></span>
+        </div>
+
+        <div class="surveillance-row">
+          <span class="surveillance-row__label">GÉNERO:</span>
+          <span class="surveillance-row__value" id="surveillance-genero"></span>
+        </div>
+        <div class="surveillance-row">
+          <span class="surveillance-row__label">AÑO DE NACIMIENTO</span>
+          <span class="surveillance-row__value" id="surveillance-anio"></span>
+        </div>
+        <div class="surveillance-row surveillance-row--header">
+          <span class="surveillance-row__label">SOSPECHOSO DE:</span>
+        </div>
+
+        <div id="surveillance-categorias"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ws-client.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/surveillance.js"></script>
+</body>
+</html>

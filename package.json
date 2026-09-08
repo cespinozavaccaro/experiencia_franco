@@ -1,0 +1,14 @@
+{
+  "name": "esto-con-franco",
+  "version": "0.1.0",
+  "description": "Instalación interactiva \"Esto con Franco sí pasaba\" — Proyecto académico de Diseño Interactivo",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pdfkit": "^0.20.2",
+    "ws": "^8.17.0"
+  }
+}

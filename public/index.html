@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Esto con Franco sí pasaba — Cuestionario</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/screens.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- PANTALLA 00 — Inicio. Mismo sistema que idioma/género: imagen de
+       fondo + botón invisible encima de "Empezar". -->
+  <section class="screen is-active" id="screen-idle" data-state="IDLE">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-inicio.png" alt="Y tú, ¿con Franco vivirías mejor?">
+      <button class="pantalla-imagen__boton" data-action="start" aria-label="Empezar" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 01 — Selección de idioma.
+       Hecha a partir de la captura de Figma: la imagen es el fondo y los
+       botones son invisibles, colocados justo encima de cada opción. -->
+  <section class="screen" id="screen-language" data-state="LANGUAGE">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-idioma.png" alt="Selecciona el idioma">
+
+      <!-- Una imagen por idioma, con la casilla ya en negro tal como en
+           Figma. Se muestra solo la que corresponda al elegir. -->
+      <img class="pantalla-imagen__estado" data-estado-de="castellano" src="assets/images/estado-castellano.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="catalan" src="assets/images/estado-catalan.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="valenciano" src="assets/images/estado-valenciano.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="gallego" src="assets/images/estado-gallego.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="euskera" src="assets/images/estado-euskera.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="aranes" src="assets/images/estado-aranes.png" alt="" hidden>
+
+      <button class="pantalla-imagen__boton" data-value="castellano" aria-label="Castellano" style="top:35.21%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="catalan" aria-label="Catalán" style="top:42.97%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="valenciano" aria-label="Valenciano" style="top:50.73%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="gallego" aria-label="Gallego" style="top:58.49%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="euskera" aria-label="Euskera" style="top:66.25%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="aranes" aria-label="Aranés" style="top:74.01%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton esta-desactivado" id="boton-siguiente-idioma" aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+
+    <!-- Aviso "idioma no autorizado": la imagen completa exportada de
+         Figma. Tocar en cualquier parte la cierra y avanza (ver app.js). -->
+    <div class="regime-modal-overlay" id="modal-idioma-error">
+      <img class="regime-modal-overlay__imagen" src="assets/images/aviso-idioma-no-autorizado.png" alt="Idioma no autorizado. Toca para continuar en Castellano.">
+    </div>
+  </section>
+
+  <!-- PANTALLA 02 — Selección de género (mismo sistema: imagen + botones
+       invisibles encima). -->
+  <section class="screen" id="screen-profile" data-state="PROFILE">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-genero.png" alt="Selecciona tu género">
+
+      <img class="pantalla-imagen__estado" data-estado-de="hombre" src="assets/images/estado-hombre.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="mujer" src="assets/images/estado-mujer.png" alt="" hidden>
+
+      <button class="pantalla-imagen__boton" data-value="hombre" aria-label="Hombre" style="top:42.97%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="mujer" aria-label="Mujer" style="top:50.73%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton esta-desactivado" id="boton-siguiente-genero" aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+
+    <!-- Aviso "precaución" (al elegir Mujer): imagen completa de Figma. -->
+    <div class="regime-modal-overlay" id="modal-mujer-precaucion">
+      <img class="regime-modal-overlay__imagen" src="assets/images/aviso-precaucion-mujer.png" alt="¿Va acompañada de un hombre? Toca para continuar.">
+    </div>
+  </section>
+
+  <!-- PANTALLA 03 — Año de nacimiento -->
+  <section class="screen" id="screen-birth-year" data-state="BIRTH_YEAR">
+    <header class="screen__header">
+      <h1 class="screen__header-title">Control de conducta</h1>
+    </header>
+    <div class="screen__body">
+      <h2 class="screen__title">Selecciona el año en el<br>que naciste:</h2>
+      <p class="screen__subtitle">Desliza el selector de arriba a abajo.</p>
+      <div class="year-picker" id="year-picker"></div>
+    </div>
+    <footer class="screen__footer">
+      <button class="cta-button" data-next="ACTIONS">
+        <span>Siguiente</span>
+        <span class="cta-button__arrow">→</span>
+      </button>
+    </footer>
+  </section>
+
+  <!-- PANTALLA 04 — Acciones cotidianas. La imagen trae la cabecera, el
+       título, el subtítulo y el botón "Siguiente" ya dibujados, pero sin
+       ninguna opción (esas son 16 y se marcan de una en una, así que se
+       generan por JavaScript y se colocan encima, en el hueco libre). -->
+  <section class="screen" id="screen-actions" data-state="ACTIONS">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-acciones.png" alt="¿Cuáles de estas cosas has hecho alguna vez? Selecciona todas las que correspondan.">
+      <div class="actions-grid" id="actions-grid" style="top:35.21%; left:5.74%; right:5.74%;"></div>
+      <button class="pantalla-imagen__boton" data-next="QUESTION_1" aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 05 — Pregunta 1: contenido político (imagen + botones
+       invisibles, igual que idioma y género). -->
+  <section class="screen" id="screen-question-1" data-state="QUESTION_1">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-pregunta-politica.png" alt="¿Has compartido algún contenido de política en tus redes sociales?">
+      <img class="pantalla-imagen__estado" data-estado-de="SI" src="assets/images/estado-si.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="NO" src="assets/images/estado-no.png" alt="" hidden>
+      <button class="pantalla-imagen__boton" data-value="SI" aria-label="Sí" style="top:42.97%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="NO" aria-label="No" style="top:50.73%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton esta-desactivado" data-siguiente aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 06 — Pregunta 2: decidir por ti. -->
+  <section class="screen" id="screen-question-2" data-state="QUESTION_2">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-pregunta-decidir.png" alt="¿Dejarías que otra persona decidiera siempre por ti?">
+      <img class="pantalla-imagen__estado" data-estado-de="SI" src="assets/images/estado-si.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="NO" src="assets/images/estado-no.png" alt="" hidden>
+      <button class="pantalla-imagen__boton" data-value="SI" aria-label="Sí" style="top:42.97%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="NO" aria-label="No" style="top:50.73%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton esta-desactivado" data-siguiente aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 07 — Pregunta 3: privacidad (escala 1 a 5). Ahora también
+       con imagen + botones invisibles, igual que el resto. -->
+  <section class="screen" id="screen-question-3" data-state="QUESTION_3">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-pregunta-privacidad.png" alt="¿Cuánto valoras tu privacidad?">
+      <img class="pantalla-imagen__estado" data-estado-de="1" src="assets/images/estado-privacidad-01.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="2" src="assets/images/estado-privacidad-02.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="3" src="assets/images/estado-privacidad-03.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="4" src="assets/images/estado-privacidad-04.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="5" src="assets/images/estado-privacidad-05.png" alt="" hidden>
+      <button class="pantalla-imagen__boton" data-value="1" aria-label="01" style="top:42.97%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="2" aria-label="02" style="top:50.73%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="3" aria-label="03" style="top:58.49%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="4" aria-label="04" style="top:66.25%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="5" aria-label="05" style="top:74.01%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton esta-desactivado" data-siguiente aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 08 — Pregunta 4: votar. -->
+  <section class="screen" id="screen-question-4" data-state="QUESTION_4">
+    <div class="pantalla-imagen">
+      <img class="pantalla-imagen__fondo" src="assets/images/pantalla-pregunta-votar.png" alt="¿Votarás en las elecciones del próximo año?">
+      <img class="pantalla-imagen__estado" data-estado-de="SI" src="assets/images/estado-si.png" alt="" hidden>
+      <img class="pantalla-imagen__estado" data-estado-de="NO" src="assets/images/estado-no.png" alt="" hidden>
+      <button class="pantalla-imagen__boton" data-value="SI" aria-label="Sí" style="top:42.97%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton" data-value="NO" aria-label="No" style="top:50.73%; left:5.74%; width:88.52%; height:6.46%;"></button>
+      <button class="pantalla-imagen__boton esta-desactivado" data-siguiente aria-label="Siguiente" style="top:88.59%; left:5.74%; width:88.52%; height:6.04%;"></button>
+    </div>
+  </section>
+
+  <!-- Pantalla de evaluación — "Comunicado Oficial" -->
+  <section class="screen" id="screen-evaluation" data-state="EVALUATION">
+    <div class="screen__body">
+      <span class="comunicado-badge">Comunicado Oficial</span>
+      <h2 class="screen__title">Has sido registrado por<br>el Régimen.</h2>
+      <div class="comunicado-photo">
+        <img id="comunicado-foto" alt="">
+        <span class="comunicado-photo__stamp">SUJETO SOSPECHOSO</span>
+      </div>
+      <p class="screen__subtitle">Espera por favor el resultado del control de tu conducta.</p>
+      <div class="comunicado-progress">
+        <div class="comunicado-progress__fill" id="comunicado-progress-fill" style="width: 0%;">0%</div>
+        <div class="comunicado-progress__rest"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ws-client.js"></script>
+<script src="js/actions.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/evaluation.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

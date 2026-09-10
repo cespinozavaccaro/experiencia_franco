@@ -5,110 +5,103 @@
 // La impresora térmica (una Zijiang ZJ-58, conectada por USB) ya está
 // dada de alta en el sistema como una cola de impresión normal, con el
 // nombre "Impresora" (se puede comprobar con el comando `lpstat -p`).
-// Para poder imprimir también la foto (no solo texto), se construye un
-// PDF con el ticket completo -texto + foto- y se manda esa cola con el
-// comando `lp`. La propia impresora (a través de su driver) se encarga
-// de convertirlo a los puntos que necesita el papel térmico.
+// El ticket se construye como un PDF (con pdfkit) y se manda a esa cola
+// con el comando `lp`. La impresora, a través de su driver, lo convierte
+// a los puntos que necesita el papel térmico.
+//
+// El ticket tiene esta estructura (de arriba abajo):
+//   1. Fecha y hora           -> texto (fuente GeistMono)
+//   2. Imagen INICIO           -> ticket-inicio.png a ancho completo
+//   3. "SOSPECHOSO" + Nº       -> texto (fuente StardosStencil / GeistMono)
+//   4. Fotografía              -> la foto que ha hecho la webcam
+//   5. Género, edad y año      -> texto (GeistMono)
+//   6. Conductas detectadas    -> texto (GeistMono), con las normas
+//                                 infringidas sacadas de conductas.json
+//   7. Imagen FINAL            -> ticket-final.png a ancho completo
 
+const path = require('path');
+const fs = require('fs');
 const { spawn } = require('child_process');
 const PDFDocument = require('pdfkit');
 
 const NOMBRE_COLA_IMPRESORA = 'Impresora';
-const ANCHURA_TICKET = 32; // caracteres por línea, para el papel de 58 mm
 
-const MM_A_PUNTOS = 2.83465; // 1 mm en puntos PDF (unidad que usa pdfkit)
-const ANCHO_PAPEL_MM = 48; // ancho útil de impresión del papel de 58 mm
-const MARGEN_MM = 3;
-const TAMANO_LETRA = 8;
-const ALTURA_LINEA = TAMANO_LETRA * 1.4;
-
-// Centra una línea de texto dentro del ancho del ticket.
-function centrar(texto) {
-  const espacios = Math.max(0, Math.floor((ANCHURA_TICKET - texto.length) / 2));
-  return ' '.repeat(espacios) + texto;
+// Datos de las conductas (mismo archivo que usa la pantalla 2). De aquí
+// se saca, para cada conducta detectada, el nombre legal y el texto de
+// la norma infringida que se imprime en el ticket.
+const RUTA_DATOS_CONDUCTAS = path.join(__dirname, '..', 'public', 'datos', 'conductas.json');
+let datosConductas = { conductas: [], cuestionario: [] };
+try {
+  datosConductas = JSON.parse(fs.readFileSync(RUTA_DATOS_CONDUCTAS, 'utf8'));
+} catch (error) {
+  console.warn('No se ha podido leer public/datos/conductas.json:', error.message);
 }
 
-// Reparte un texto largo en varias líneas, cortando por palabras
-// completas, para que no se corte ninguna palabra a la mitad.
-function repartirEnLineas(texto) {
-  const palabras = texto.split(' ');
-  const lineas = [];
-  let lineaActual = '';
+// evaluation.js guarda cada conducta con su nombre en mayúsculas. Esta
+// tabla lo traduce al identificador que usa conductas.json.
+const NOMBRE_CONDUCTA_A_ID = {
+  'CRITICAR AL RÉGIMEN': 'criticar_regimen',
+  'PARTICIPAR EN MANIFESTACIONES': 'participar_manifestaciones',
+  'MANTENER CONDUCTAS INMORALES': 'conductas_inmorales',
+  'CONSUMIR CONTENIDOS NO AUTORIZADOS': 'contenidos_no_autorizados',
+  'ACTUAR SIN AUTORIZACIÓN': 'actuar_sin_autorizacion',
+  'UTILIZAR UNA LENGUA NO AUTORIZADA': 'lengua_no_autorizada'
+};
 
-  palabras.forEach((palabra) => {
-    const posibleLinea = lineaActual ? `${lineaActual} ${palabra}` : palabra;
-    if (posibleLinea.length > ANCHURA_TICKET) {
-      lineas.push(lineaActual);
-      lineaActual = palabra;
-    } else {
-      lineaActual = posibleLinea;
-    }
-  });
-  if (lineaActual) lineas.push(lineaActual);
-
-  return lineas;
+// Devuelve la ficha completa (de conductas.json) de una conducta a
+// partir de su nombre en mayúsculas, o null si no se encuentra.
+function fichaConducta(nombreConducta) {
+  const id = NOMBRE_CONDUCTA_A_ID[nombreConducta];
+  return datosConductas.conductas.find((conducta) => conducta.id === id) || null;
 }
 
-// Convierte la fecha guardada (formato ISO) en algo legible, tipo
-// "20/11/2026  18:43".
-function formatearFecha(timestampISO) {
-  const fecha = new Date(timestampISO);
-  const dosDigitos = (numero) => String(numero).padStart(2, '0');
-  const diaMesAnio = `${dosDigitos(fecha.getDate())}/${dosDigitos(fecha.getMonth() + 1)}/${fecha.getFullYear()}`;
-  const horaMinuto = `${dosDigitos(fecha.getHours())}:${dosDigitos(fecha.getMinutes())}`;
-  return `${diaMesAnio}  ${horaMinuto}`;
+// Medidas EXACTAS que exige el driver de la impresora (sacadas de su PPD):
+//   - El papel de 58 mm son 164 puntos de ancho, y ese ancho es FIJO
+//     (la impresora no acepta otro; si se le manda más, se atasca).
+//   - Tiene un margen de hardware de 14 puntos (~5 mm) a cada lado que no
+//     se puede imprimir. La zona imprimible es, por tanto, de 136 puntos.
+// Hacemos la PÁGINA de 164 puntos (papel completo) y dejamos 15 puntos de
+// margen a cada lado, así el contenido (134 pt) cae centrado dentro de la
+// zona imprimible y no se corta ningún borde.
+const ANCHO_PAGINA_PT = 164;
+const MARGEN_PT = 15;
+
+const RUTA_FUENTE_MONO = path.join(__dirname, 'fonts', 'GeistMono.ttf');
+const RUTA_FUENTE_STENCIL = path.join(__dirname, 'fonts', 'StardosStencil-Bold.ttf');
+const RUTA_IMAGEN_INICIO = path.join(__dirname, '..', 'public', 'assets', 'images', 'ticket-inicio.png');
+const RUTA_IMAGEN_FINAL = path.join(__dirname, '..', 'public', 'assets', 'images', 'ticket-final.png');
+
+// Proporción alto/ancho de las dos imágenes (medidas de los PNG originales),
+// para saber cuánto ocuparán de alto al ponerlas a ancho completo.
+const PROPORCION_IMAGEN_INICIO = 888 / 335;
+const PROPORCION_IMAGEN_FINAL = 857 / 354;
+
+const MESES = [
+  'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+  'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'
+];
+
+// --- Pequeñas utilidades para dibujar ------------------------------------
+
+// Deja un hueco vertical de "puntos" píxeles.
+function hueco(doc, puntos) {
+  doc.y += puntos;
 }
 
-// Construye, línea a línea, el texto del ticket (sección 12 del prompt).
-// Se usa tanto para el aviso por consola como para el PDF que se imprime,
-// así el contenido nunca queda desincronizado entre los dos.
-// Las referencias históricas concretas se añadirán cuando se confirme su
-// texto definitivo; de momento se deja el hueco, sin inventarlas.
-function construirLineasTicket(datosParticipante) {
-  const lineas = [];
+// Dibuja una línea horizontal de lado a lado del contenido.
+function lineaHorizontal(doc, x, ancho, discontinua = false) {
+  doc.moveTo(x, doc.y).lineTo(x + ancho, doc.y).lineWidth(1);
+  if (discontinua) doc.dash(3, { space: 3 });
+  doc.stroke();
+  doc.undash();
+  doc.y += 4;
+}
 
-  lineas.push(centrar('REGISTRO DE CONDUCTA'));
-  lineas.push(centrar(`Nº ${datosParticipante.numeroExpediente}`));
-  lineas.push('');
-  lineas.push(formatearFecha(datosParticipante.timestamp));
-  lineas.push('');
-  lineas.push(centrar('SUJETO CLASIFICADO'));
-  lineas.push('-'.repeat(ANCHURA_TICKET));
-  lineas.push('CONDUCTAS DETECTADAS:');
-  lineas.push('');
-
-  const conductas = datosParticipante.conductas || [];
-  if (conductas.length === 0) {
-    lineas.push('(ninguna detectada)');
-  } else {
-    conductas.forEach((conducta, indice) => {
-      const numero = String(indice + 1).padStart(2, '0');
-      lineas.push(`${numero} - ${conducta}`);
-    });
-  }
-
-  lineas.push('-'.repeat(ANCHURA_TICKET));
-  lineas.push(centrar('ORDEN DE DETENCIÓN'));
-  lineas.push(centrar(`Nº ${datosParticipante.numeroExpediente}`));
-  lineas.push('');
-  lineas.push(centrar('DOCUMENTO FICTICIO'));
-  lineas.push('');
-  lineas.push(...repartirEnLineas(
-    'Esta reconstrucción utiliza legislación, normas y mecanismos de control reales de la dictadura franquista.'
-  ));
-  lineas.push('');
-  lineas.push(...repartirEnLineas(
-    'La correspondencia entre la conducta actual y la consecuencia histórica no es una equivalencia jurídica literal.'
-  ));
-  lineas.push('-'.repeat(ANCHURA_TICKET));
-  lineas.push(centrar('50 AÑOS EN LIBERTAD'));
-  lineas.push(centrar('¿VIVIRÍAS MEJOR EN'));
-  lineas.push(centrar('UNA DICTADURA?'));
-  lineas.push('');
-  lineas.push('');
-  lineas.push('');
-
-  return lineas;
+// Coloca una imagen a ancho completo y adelanta el cursor su alto.
+function imagenAnchoCompleto(doc, rutaOBytes, x, ancho, proporcionAltoAncho) {
+  const alto = ancho * proporcionAltoAncho;
+  doc.image(rutaOBytes, x, doc.y, { width: ancho });
+  doc.y += alto;
 }
 
 // Convierte la foto guardada (una "data URL" tipo "data:image/jpeg;base64,...")
@@ -124,56 +117,165 @@ function decodificarFoto(foto) {
   }
 }
 
-// Construye el PDF completo del ticket (foto + texto) y devuelve sus
-// bytes ya preparados para imprimir.
-function construirPdfTicket(datosParticipante) {
-  return new Promise((resolve, reject) => {
-    const lineas = construirLineasTicket(datosParticipante);
-    const fotoBuffer = decodificarFoto(datosParticipante.foto);
+// Fecha y hora en el formato del diseño: "20 NOVIEMBRE 2026" y "13:35".
+function partesFecha(timestampISO) {
+  const fecha = timestampISO ? new Date(timestampISO) : new Date();
+  const dosDigitos = (n) => String(n).padStart(2, '0');
+  return {
+    dia: `${fecha.getDate()} ${MESES[fecha.getMonth()]} ${fecha.getFullYear()}`,
+    hora: `${dosDigitos(fecha.getHours())}:${dosDigitos(fecha.getMinutes())}`
+  };
+}
 
-    const anchoPt = ANCHO_PAPEL_MM * MM_A_PUNTOS;
-    const margenPt = MARGEN_MM * MM_A_PUNTOS;
-    const anchoUtilPt = anchoPt - margenPt * 2;
+// --- Contenido del ticket ----------------------------------------------
 
-    // Se calcula la altura de la foto suponiendo una proporción 4:3
-    // (la misma que usa la webcam al hacer la captura).
-    const altoFotoPt = fotoBuffer ? anchoUtilPt * (3 / 4) : 0;
-    const espacioTrasFoto = fotoBuffer ? 10 : 0;
-    const altoTextoPt = lineas.length * ALTURA_LINEA;
-    const altoTotalPt = margenPt * 2 + altoFotoPt + espacioTrasFoto + altoTextoPt + 20;
+// Dibuja TODO el ticket dentro del documento "doc". Es una función
+// determinista: dibuja exactamente lo mismo cada vez que se llama, así
+// se puede usar una primera vez solo para medir cuánto ocupa y una
+// segunda vez para el PDF de verdad, ya con la altura justa.
+function pintarTicket(doc, datos, fotoBuffer) {
+  const margen = MARGEN_PT;
+  const ancho = ANCHO_PAGINA_PT - margen * 2;
 
-    const documento = new PDFDocument({
-      size: [anchoPt, altoTotalPt],
-      margins: { top: margenPt, bottom: margenPt, left: margenPt, right: margenPt }
+  doc.x = margen;
+  doc.y = margen;
+
+  const { dia, hora } = partesFecha(datos.timestamp);
+  const genero = (datos.genero || '').toUpperCase() || '—';
+  const edad = datos.edad || '—';
+  const anioNacimiento = datos.anioNacimiento || '—';
+  const numeroExpediente = String(datos.numeroExpediente || '0').padStart(5, '0');
+  const conductas = datos.conductas || [];
+
+  // 1) Fecha y hora
+  doc.font('mono').fontSize(9).fillColor('#000000');
+  doc.text(dia, margen, doc.y, { width: ancho, align: 'center' });
+  doc.text(`EN MADRID, ${hora} HORAS`, margen, doc.y, { width: ancho, align: 'center' });
+  hueco(doc, 8);
+
+  // 2) Imagen de inicio (título + águila + "documento ficticio" + aviso)
+  imagenAnchoCompleto(doc, RUTA_IMAGEN_INICIO, margen, ancho, PROPORCION_IMAGEN_INICIO);
+  hueco(doc, 10);
+
+  // 3) "SOSPECHOSO" y número de expediente en una caja
+  lineaHorizontal(doc, margen, ancho);
+  doc.font('stencil').fontSize(15);
+  doc.text('SOSPECHOSO', margen, doc.y, { width: ancho, align: 'center', lineBreak: false });
+  hueco(doc, 2);
+  lineaHorizontal(doc, margen, ancho);
+  hueco(doc, 6);
+
+  const altoCaja = 28;
+  doc.rect(margen, doc.y, ancho, altoCaja).lineWidth(1.5).stroke();
+  doc.font('mono').fontSize(15);
+  doc.text(numeroExpediente, margen, doc.y + altoCaja / 2 - 8, { width: ancho, align: 'center' });
+  doc.y += altoCaja;
+  hueco(doc, 8);
+
+  // 4) Fotografía (o un hueco gris con "(FOTO)" si no hay)
+  if (fotoBuffer) {
+    const imagen = doc.openImage(fotoBuffer);
+    imagenAnchoCompleto(doc, fotoBuffer, margen, ancho, imagen.height / imagen.width);
+  } else {
+    const altoFoto = ancho * 0.75;
+    doc.rect(margen, doc.y, ancho, altoFoto).fill('#cccccc');
+    doc.fillColor('#000000').font('mono').fontSize(13);
+    doc.text('(FOTO)', margen, doc.y + altoFoto / 2 - 8, { width: ancho, align: 'center' });
+    doc.y += altoFoto;
+  }
+  hueco(doc, 8);
+
+  // 5) Género, edad y año de nacimiento
+  doc.font('mono').fontSize(9).fillColor('#000000');
+  doc.text(`${genero}, DE ${edad} AÑOS`, margen, doc.y, { width: ancho, align: 'center' });
+  doc.text(`(${anioNacimiento})`, margen, doc.y, { width: ancho, align: 'center' });
+  hueco(doc, 12);
+
+  // 6) Conductas detectadas + normas infringidas
+  doc.font('stencil').fontSize(9);
+  doc.text('CONDUCTAS DETECTADAS:', margen, doc.y, { width: ancho, lineBreak: false });
+  hueco(doc, 6);
+
+  if (conductas.length === 0) {
+    doc.font('mono').fontSize(8.5);
+    doc.text('(NINGUNA DETECTADA)', margen, doc.y, { width: ancho });
+  } else {
+    conductas.forEach((nombreConducta, indice) => {
+      const ficha = fichaConducta(nombreConducta);
+      const numero = String(indice + 1).padStart(2, '0');
+      const titulo = (ficha ? ficha.nombre_legal : nombreConducta).toUpperCase();
+
+      // Título: el nombre legal de la norma.
+      doc.font('mono').fontSize(9);
+      doc.text(`${numero}. ${titulo}`, margen, doc.y, { width: ancho, lineGap: 2 });
+      hueco(doc, 5);
+
+      // Cuerpo: explicación + referencia legal + caso real. Es el campo
+      // "texto_ticket_final" de conductas.json (lleva saltos de línea).
+      // "lineGap" separa un poco las líneas para que no salga todo pegado.
+      doc.font('mono').fontSize(7.5);
+      doc.text(ficha ? ficha.texto_ticket_final : '', margen, doc.y, { width: ancho, lineGap: 3 });
+
+      hueco(doc, 8);
+      if (indice < conductas.length - 1) {
+        lineaHorizontal(doc, margen, ancho, true);
+        hueco(doc, 6);
+      }
     });
+  }
+  hueco(doc, 8);
+
+  // 7) Imagen final ("CON FRANCO NO SE VIVÍA MEJOR..." + logos)
+  imagenAnchoCompleto(doc, RUTA_IMAGEN_FINAL, margen, ancho, PROPORCION_IMAGEN_FINAL);
+
+  // Un poco de papel en blanco al final, antes del corte.
+  hueco(doc, 24);
+}
+
+// Construye el PDF completo del ticket y devuelve sus bytes.
+function construirPdfTicket(datos) {
+  return new Promise((resolve, reject) => {
+    const fotoBuffer = decodificarFoto(datos.foto);
+
+    // Primera pasada: se dibuja todo en un documento "de mentira", muy
+    // alto, solo para medir cuánto ocupa el ticket de verdad.
+    const docMedida = new PDFDocument({ size: [ANCHO_PAGINA_PT, 5000], margin: 0 });
+    docMedida.registerFont('mono', RUTA_FUENTE_MONO);
+    docMedida.registerFont('stencil', RUTA_FUENTE_STENCIL);
+    docMedida.on('data', () => {});
+    docMedida.on('error', reject);
+    pintarTicket(docMedida, datos, fotoBuffer);
+    const alturaTicket = Math.ceil(docMedida.y);
+    docMedida.end();
+
+    // Segunda pasada: el documento real, ya con la altura justa.
+    const doc = new PDFDocument({ size: [ANCHO_PAGINA_PT, alturaTicket], margin: 0 });
+    doc.registerFont('mono', RUTA_FUENTE_MONO);
+    doc.registerFont('stencil', RUTA_FUENTE_STENCIL);
 
     const trozos = [];
-    documento.on('data', (trozo) => trozos.push(trozo));
-    documento.on('end', () => resolve(Buffer.concat(trozos)));
-    documento.on('error', reject);
+    doc.on('data', (trozo) => trozos.push(trozo));
+    doc.on('end', () => resolve({
+      pdf: Buffer.concat(trozos),
+      anchoPt: ANCHO_PAGINA_PT,
+      altoPt: alturaTicket
+    }));
+    doc.on('error', reject);
 
-    if (fotoBuffer) {
-      try {
-        documento.image(fotoBuffer, margenPt, margenPt, { width: anchoUtilPt });
-        documento.y = margenPt + altoFotoPt + espacioTrasFoto;
-      } catch (error) {
-        console.warn('No se ha podido incluir la foto en el ticket:', error.message);
-      }
-    }
-
-    documento.font('Courier').fontSize(TAMANO_LETRA);
-    lineas.forEach((linea) => {
-      documento.text(linea, { width: anchoUtilPt, align: 'left' });
-    });
-
-    documento.end();
+    pintarTicket(doc, datos, fotoBuffer);
+    doc.end();
   });
 }
 
-// Manda los bytes ya construidos (el PDF) a la cola de impresión del
-// sistema (equivale a escribir en la terminal: `lp -d Impresora`).
-function enviarAImpresora(bytes) {
-  const proceso = spawn('lp', ['-d', NOMBRE_COLA_IMPRESORA]);
+// Manda los bytes del PDF a la cola de impresión del sistema.
+// Se le pasa el tamaño EXACTO de página (en puntos, que es lo que espera
+// el driver) para que la impresora no reescale ni descoloque el ticket.
+function enviarAImpresora(bytes, anchoPt, altoPt) {
+  const proceso = spawn('lp', [
+    '-d', NOMBRE_COLA_IMPRESORA,
+    '-o', `PageSize=Custom.${anchoPt}x${altoPt}`,
+    '-o', 'fit-to-page=false'
+  ]);
 
   proceso.on('error', (error) => {
     console.warn(`No se ha podido hablar con la impresora "${NOMBRE_COLA_IMPRESORA}": ${error.message}`);
@@ -192,17 +294,16 @@ function enviarAImpresora(bytes) {
 }
 
 async function imprimirOrdenDetencion(datosParticipante) {
-  const lineas = construirLineasTicket(datosParticipante);
-
-  // Se deja también en la consola, para poder comprobar el contenido sin
-  // gastar papel cada vez que se prueba.
+  const { dia, hora } = partesFecha(datosParticipante.timestamp);
   console.log('================================================================');
-  console.log(lineas.join('\n'));
+  console.log(` TICKET  |  ${dia}  ${hora}  |  Nº ${datosParticipante.numeroExpediente}`);
+  console.log(` Conductas: ${(datosParticipante.conductas || []).join(', ') || '(ninguna)'}`);
+  console.log(` Foto: ${datosParticipante.foto ? 'sí' : 'no'}`);
   console.log('================================================================');
 
   try {
-    const pdf = await construirPdfTicket(datosParticipante);
-    enviarAImpresora(pdf);
+    const { pdf, anchoPt, altoPt } = await construirPdfTicket(datosParticipante);
+    enviarAImpresora(pdf, anchoPt, altoPt);
   } catch (error) {
     console.warn('No se ha podido generar el PDF del ticket:', error.message);
   }

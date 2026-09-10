@@ -3,55 +3,38 @@
 // escucha lo que va pasando en la pantalla táctil (a través del
 // servidor) y dibuja el expediente que se va acumulando.
 
-// Orden y textos con los que se muestra cada categoría en el expediente
-// ("Las paredes oyen"). El texto que se ve en pantalla puede ser distinto
-// del nombre "oficial" de la categoría (el que usa evaluation.js), porque
-// así aparece en el diseño.
-const ORDEN_EXPEDIENTE = [
-  { categoria: 'CRITICAR AL RÉGIMEN', texto: 'CRITICAR AL RÉGIMEN POLÍTICO' },
-  { categoria: 'PARTICIPAR EN MANIFESTACIONES', texto: 'PARTICIPAR EN MANIFESTACIONES' },
-  { categoria: 'MANTENER CONDUCTAS INMORALES', texto: 'MANTENER CONDUCTAS INMORALES' },
-  { categoria: 'ACTUAR SIN AUTORIZACIÓN', texto: 'DECIDIR SIN PERMISO' },
-  { categoria: 'CONSUMIR CONTENIDOS NO AUTORIZADOS', texto: 'CONSUMIR CONTENIDOS\nNO AUTORIZADOS' },
-  { categoria: 'UTILIZAR UNA LENGUA NO AUTORIZADA', texto: 'UTILIZAR UNA LENGUA\nNO AUTORIZADA' }
-];
-
-// Cómo se escribe cada género en el ticket (abreviado, como en el diseño).
-const LETRA_SEGUN_GENERO = { hombre: 'M', mujer: 'F' };
+// El expediente que se ve en pantalla es el PNG "Registro de Conducta"
+// (registro-base.png) con un PNG de tachón encima por cada conducta.
+// evaluation.js guarda las conductas con su nombre en mayúsculas; aquí
+// se traduce ese nombre al identificador que lleva cada PNG de tachón
+// (el atributo data-conducta del HTML).
+const NOMBRE_CONDUCTA_A_ID = {
+  'CRITICAR AL RÉGIMEN': 'criticar_regimen',
+  'PARTICIPAR EN MANIFESTACIONES': 'participar_manifestaciones',
+  'MANTENER CONDUCTAS INMORALES': 'conductas_inmorales',
+  'CONSUMIR CONTENIDOS NO AUTORIZADOS': 'contenidos_no_autorizados',
+  'ACTUAR SIN AUTORIZACIÓN': 'actuar_sin_autorizacion',
+  'UTILIZAR UNA LENGUA NO AUTORIZADA': 'lengua_no_autorizada'
+};
 
 const pantallaReposo = document.getElementById('surveillance-idle');
 const pantallaExpediente = document.getElementById('surveillance-active');
 const casillaNumeroExpediente = document.getElementById('surveillance-numero');
-const casillaGenero = document.getElementById('surveillance-genero');
-const casillaAnio = document.getElementById('surveillance-anio');
-const listaCategorias = document.getElementById('surveillance-categorias');
+const tachones = document.querySelectorAll('.registro__tachon');
 const videoVigilancia = document.getElementById('surveillance-video');
 const videoReposo = document.getElementById('surveillance-video-reposo');
 
-// Dibuja de nuevo el expediente completo con los datos de la sesión.
+// Dibuja de nuevo el expediente con los datos de la sesión: escribe el
+// número y enseña u oculta cada tachón según las conductas detectadas.
 function dibujarExpediente(sesion) {
-  casillaNumeroExpediente.textContent = sesion.numeroExpediente || '-----';
-  casillaGenero.textContent = LETRA_SEGUN_GENERO[sesion.genero] || '—';
-  casillaAnio.textContent = sesion.anioNacimiento || '—';
+  casillaNumeroExpediente.textContent = sesion.numeroExpediente || '';
 
-  listaCategorias.innerHTML = '';
-  const conductasDetectadas = sesion.conductas || [];
+  const idsActivos = (sesion.conductas || [])
+    .map((nombre) => NOMBRE_CONDUCTA_A_ID[nombre])
+    .filter(Boolean);
 
-  ORDEN_EXPEDIENTE.forEach(({ categoria, texto }) => {
-    const fila = document.createElement('div');
-    fila.className = 'surveillance-categoria';
-    if (conductasDetectadas.includes(categoria)) fila.classList.add('is-checked');
-
-    const casillaCheck = document.createElement('span');
-    casillaCheck.className = 'surveillance-categoria__box';
-
-    const etiqueta = document.createElement('span');
-    etiqueta.className = 'surveillance-categoria__label';
-    etiqueta.textContent = texto;
-
-    fila.appendChild(casillaCheck);
-    fila.appendChild(etiqueta);
-    listaCategorias.appendChild(fila);
+  tachones.forEach((tachon) => {
+    tachon.hidden = !idsActivos.includes(tachon.dataset.conducta);
   });
 }
 
@@ -104,5 +87,35 @@ function intentarCapturarFoto(intentosRestantes = 8) {
 // que nadie empiece el cuestionario), para que se vea en directo a
 // través del hueco transparente de la imagen de reposo.
 iniciarCamara(videoReposo);
+
+// Cabecera de la pantalla activa: va rotando entre 3 banners, 10 segundos
+// cada uno, con una barra que se llena de negro para marcar ese tiempo.
+const BANNERS_CABECERA = [
+  'assets/images/banner-1.png',
+  'assets/images/banner-2.png',
+  'assets/images/banner-3.png'
+];
+const DURACION_BANNER_MS = 10000;
+
+const imagenBanner = document.getElementById('surveillance-banner');
+const rellenoBarraCabecera = document.getElementById('surveillance-barra-relleno');
+let indiceBannerActual = 0;
+
+function mostrarBanner(indice) {
+  imagenBanner.src = BANNERS_CABECERA[indice];
+
+  // Se quita la barra a 0% y se obliga al navegador a "dibujarla" así
+  // antes de volver a ponerla en marcha; si no, como ya estaba en el DOM,
+  // seguiría animándose desde donde se había quedado en vez de reiniciar.
+  rellenoBarraCabecera.classList.remove('en-marcha');
+  rellenoBarraCabecera.getBoundingClientRect();
+  rellenoBarraCabecera.classList.add('en-marcha');
+}
+
+mostrarBanner(indiceBannerActual);
+setInterval(() => {
+  indiceBannerActual = (indiceBannerActual + 1) % BANNERS_CABECERA.length;
+  mostrarBanner(indiceBannerActual);
+}, DURACION_BANNER_MS);
 
 conectarConServidor();

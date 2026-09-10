@@ -141,6 +141,7 @@ botonesGenero.forEach((boton) => {
     const genero = boton.dataset.value;
     mostrarEstadoSeleccionado(pantallaGenero, genero);
     guardarCambio({ genero });
+    actualizarConductas();
 
     if (genero === 'mujer') {
       avisoPrecaucionMujer.classList.add('is-active');

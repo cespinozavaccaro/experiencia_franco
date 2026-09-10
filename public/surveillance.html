@@ -18,37 +18,39 @@
     <img class="surveillance-idle__imagen" src="assets/images/pantalla-espera.png" alt="La Pedagogía del Terror — Ver, oír y chivar">
   </section>
 
-  <!-- Estado activo: expediente en construcción ("Las paredes oyen").
-       El vídeo de la webcam ocupa todo el fondo de la pantalla, y el
-       texto del expediente se muestra encima, en una capa transparente. -->
+  <!-- Estado activo: expediente en construcción. Por capas, de atrás a
+       delante: (1) vídeo de la webcam, (2) "Registro de Conducta" a
+       pantalla completa con sus tachones, (3) el banner que va rotando
+       con su barra de carga, pegado arriba, tapando la parte superior
+       del registro. -->
   <section class="screen" id="surveillance-active">
     <video id="surveillance-video" class="surveillance-video-fondo" autoplay muted playsinline></video>
 
-    <div class="surveillance-overlay">
-      <header class="surveillance-header">
-        <h1 class="surveillance-header__title">“Las paredes oyen”</h1>
-      </header>
-      <div class="surveillance-body">
-        <div class="surveillance-stamp-row">
-          <span class="surveillance-stamp">SUJETO SOSPECHOSO</span>
-          <span class="surveillance-registro">REGISTRO Nº: <span id="surveillance-numero"></span></span>
-        </div>
-
-        <div class="surveillance-row">
-          <span class="surveillance-row__label">GÉNERO:</span>
-          <span class="surveillance-row__value" id="surveillance-genero"></span>
-        </div>
-        <div class="surveillance-row">
-          <span class="surveillance-row__label">AÑO DE NACIMIENTO</span>
-          <span class="surveillance-row__value" id="surveillance-anio"></span>
-        </div>
-        <div class="surveillance-row surveillance-row--header">
-          <span class="surveillance-row__label">SOSPECHOSO DE:</span>
-        </div>
-
-        <div id="surveillance-categorias"></div>
-      </div>
+    <!-- Capa base: el PNG "Registro de Conducta" ocupa toda la pantalla y,
+         encima, un PNG de tachón por cada conducta detectada. Los PNG son
+         transparentes salvo el dibujo, así que la webcam se sigue viendo
+         por detrás. El número de expediente se escribe dentro del recuadro
+         de la caja negra "SOSPECHOSO". -->
+    <div class="registro">
+      <img class="registro__base" src="assets/images/registro-base.png" alt="Registro de conducta">
+      <img class="registro__tachon" data-conducta="criticar_regimen" src="assets/images/registro-tachon-1.png" alt="" hidden>
+      <img class="registro__tachon" data-conducta="participar_manifestaciones" src="assets/images/registro-tachon-2.png" alt="" hidden>
+      <img class="registro__tachon" data-conducta="conductas_inmorales" src="assets/images/registro-tachon-3.png" alt="" hidden>
+      <img class="registro__tachon" data-conducta="contenidos_no_autorizados" src="assets/images/registro-tachon-4.png" alt="" hidden>
+      <img class="registro__tachon" data-conducta="actuar_sin_autorizacion" src="assets/images/registro-tachon-5.png" alt="" hidden>
+      <img class="registro__tachon" data-conducta="lengua_no_autorizada" src="assets/images/registro-tachon-6.png" alt="" hidden>
+      <div class="registro__numero" id="surveillance-numero"></div>
     </div>
+
+    <!-- Capa de encima: rota entre 3 imágenes (una cada 10 segundos), con
+         una barra de carga debajo que se va llenando de negro durante esos
+         10 segundos, para marcar cuánto queda para el siguiente banner. -->
+    <header class="surveillance-header">
+      <img class="surveillance-header__banner" id="surveillance-banner" src="assets/images/banner-1.png" alt="">
+      <div class="surveillance-header__barra">
+        <div class="surveillance-header__barra-relleno" id="surveillance-barra-relleno"></div>
+      </div>
+    </header>
   </section>
 
 </div>

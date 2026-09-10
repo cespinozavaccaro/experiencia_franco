@@ -1,0 +1,331 @@
+{
+  "conductas": [
+    {
+      "id": "criticar_regimen",
+      "conducta": "CRITICAR AL RÉGIMEN",
+      "nombre_legal": "Injurias o desacato a las instituciones",
+      "nombres_alternativos": [
+        "Propaganda ilegal contra el Estado",
+        "Injurias o desacato a las instituciones",
+        "Difundir noticias que dañen al Estado"
+      ],
+      "texto_historico": "La crítica política estaba limitada. El Código Penal castigaba con prisión y multa cualquier propaganda, dentro o fuera de España, que buscara subvertir el orden del Estado, dañar su crédito o prestigio, o relajar el sentimiento nacional. La Ley de Prensa e Imprenta sometía además toda publicación a la censura previa del Estado.",
+      "referencia_legal_verificada": "Código Penal de 1944 (reforma 1963), arts. 251 y 253, Cap. XI \"De las propagandas ilegales\"; Ley 14/1966, de 18 de marzo, de Prensa e Imprenta, art. 2 (BOE)",
+      "vigencia": "1944-1978 (Código Penal) / 1966-1978 (Ley de Prensa)",
+      "texto_ticket": "Prensa y expresión sometidas a límites y censura. Difundir propaganda contraria al régimen se castigaba con prisión, multa e inhabilitación.\nLey 14/1966, de Prensa e Imprenta / Código Penal 1944, art. 251",
+      "texto_ticket_final": "Criticar públicamente al régimen o sus instituciones se perseguía como propaganda ilegal, castigada con prisión, multa e inhabilitación.\nLey 14/1966, de Prensa e Imprenta / Código Penal 1944, art. 251\nLe pasó a José A. Martínez Soler: secuestrado y torturado por un artículo.",
+      "personaje_historico": {
+        "nombre": "José Antonio Martínez Soler",
+        "descripcion": "Periodista. En 1976 fue secuestrado y torturado por un comando de la Guardia Civil por un artículo crítico con el régimen; tuvo que exiliarse a EE. UU.",
+        "consecuencia_breve": "secuestrado y torturado por un artículo"
+      },
+      "personaje_alternativo": "Miguel de Unamuno — rector de la Universidad de Salamanca, destituido y puesto bajo arresto domiciliario en 1936 tras enfrentarse públicamente al régimen (caso anterior a estas leyes concretas, pero referente histórico de la censura a la crítica)."
+    },
+    {
+      "id": "participar_manifestaciones",
+      "conducta": "PARTICIPAR EN MANIFESTACIONES",
+      "nombre_legal": "Alteración del orden público",
+      "nombres_alternativos": [
+        "Alteración del orden público",
+        "Sedición",
+        "Reunión no autorizada",
+        "Convocar o participar en huelgas"
+      ],
+      "texto_historico": "Las reuniones y manifestaciones estaban sometidas al control de la autoridad y podían ser prohibidas, disueltas o limitadas por motivos de orden público. Las huelgas y paros laborales se equiparaban a un delito de sedición.",
+      "referencia_legal_verificada": "Ley 45/1959, de Orden Público; Ley 17/1976, de Derecho de Reunión; Código Penal de 1944, art. 222 (sedición, huelgas) (BOE)",
+      "vigencia": "1944-1977 (huelgas) / 1959-1976 (orden público)",
+      "texto_ticket": "Reuniones y manifestaciones bajo control de la autoridad. Convocar o participar en una huelga se consideraba sedición.\nLey 45/1959, de Orden Público / Código Penal 1944, art. 222",
+      "texto_ticket_final": "Reunirse, manifestarse o convocar y participar en una huelga estaba sometido al control de la autoridad y podía considerarse sedición.\nLey 45/1959, de Orden Público / Código Penal 1944, art. 222\nLe pasó a Marcelino Camacho: 5 años preso en Carabanchel por huelguista.",
+      "personaje_historico": {
+        "nombre": "Marcelino Camacho",
+        "descripcion": "Líder y fundador de Comisiones Obreras (CCOO). Encarcelado cinco años en la prisión de Carabanchel por su actividad sindical y huelguística; despedido de su trabajo tras salir libre.",
+        "consecuencia_breve": "5 años preso en Carabanchel por huelguista"
+      },
+      "personaje_alternativo": null
+    },
+    {
+      "id": "conductas_inmorales",
+      "conducta": "MANTENER CONDUCTAS INMORALES",
+      "nombre_legal": "Faltas contra la moral y las buenas costumbres",
+      "nombres_alternativos": [
+        "Peligrosidad social",
+        "Escándalo público",
+        "Faltas contra la moral y las buenas costumbres"
+      ],
+      "texto_historico": "El régimen utilizó la llamada \"moral pública\" y el concepto de \"peligrosidad social\" para perseguir determinadas conductas. La homosexualidad, el adulterio femenino, el amancebamiento y otras conductas contrarias a las \"buenas costumbres\" podían dar lugar a medidas de seguridad, internamiento o prisión.",
+      "referencia_legal_verificada": "Ley 16/1970, de Peligrosidad y Rehabilitación Social, art. 2; Ley de Vagos y Maleantes (reforma 1954), art. 6.2; Código Penal de 1944, arts. 449 (adulterio) y 452 (amancebamiento) (BOE)",
+      "vigencia": "1954-1970 (Vagos y Maleantes) / 1970-1979 (Peligrosidad Social) / 1944-1978 (Código Penal)",
+      "texto_ticket": "Determinadas conductas afectivas, sexuales o de convivencia podían ser declaradas peligrosidad social.\nLey 16/1970, de Peligrosidad y Rehabilitación Social",
+      "texto_ticket_final": "Determinadas conductas afectivas, sexuales o de convivencia se consideraban faltas contra la moral y las buenas costumbres, y podían declararse peligrosidad social.\nLey 16/1970, de Peligrosidad y Rehabilitación Social\nLe pasó a Miguel Molina: torturado y expulsado de España por su homosexualidad.",
+      "personaje_historico": {
+        "nombre": "Miguel Molina",
+        "descripcion": "Cantante popular durante la República. Torturado por falangistas y expulsado de España por su homosexualidad, considerada entonces un delito.",
+        "consecuencia_breve": "torturado y expulsado de España por su homosexualidad"
+      },
+      "personaje_alternativo": "Luis Cernuda — poeta de la Generación del 27, tuvo que exiliarse por su condición de republicano y homosexual; murió en México en 1963."
+    },
+    {
+      "id": "contenidos_no_autorizados",
+      "conducta": "CONSUMIR CONTENIDOS NO AUTORIZADOS",
+      "nombre_legal": "Publicaciones o material no autorizado",
+      "nombres_alternativos": [
+        "Propaganda clandestina",
+        "Publicaciones o material no autorizado",
+        "Tenencia y difusión de contenido prohibido"
+      ],
+      "texto_historico": "La prensa, los libros y cualquier publicación estaban sometidos a límites sobre lo que podía difundirse o consultarse. La Administración podía intervenir, secuestrar o prohibir contenidos considerados contrarios a la moral o a la legislación vigente, incluida la información sobre anticoncepción.",
+      "referencia_legal_verificada": "Ley 14/1966, de Prensa e Imprenta, arts. 2-4; Ley de Prensa de 1938 (censura previa); Código Penal de 1944, art. 416 (difusión y propaganda anticonceptiva) (BOE)",
+      "vigencia": "1938-1966 (censura previa) / 1966-1978 (Ley Fraga) / 1944-1978 (anticonceptivos)",
+      "texto_ticket": "La difusión y el consumo de determinada información estaban sometidos a censura y restricciones.\nLey 14/1966, de Prensa e Imprenta",
+      "texto_ticket_final": "La tenencia, difusión o consumo de publicaciones y contenidos no autorizados estaba sometida a censura previa.\nLey 14/1966, de Prensa e Imprenta\nLe pasó a Ana Westley: procesada y censurada por hablar de anticoncepción.",
+      "personaje_historico": {
+        "nombre": "Ana Westley",
+        "descripcion": "Periodista. Procesada por \"escándalo público\" tras publicar un artículo sobre la píldora anticonceptiva; su libro Cómo se hacen los niños fue prohibido por la censura franquista.",
+        "consecuencia_breve": "procesada y censurada por hablar de anticoncepción"
+      },
+      "personaje_alternativo": null
+    },
+    {
+      "id": "actuar_sin_autorizacion",
+      "conducta": "ACTUAR SIN AUTORIZACIÓN / DECIDIR SIN PERMISO",
+      "nombre_legal": "Tutela masculina obligatoria",
+      "nombres_alternativos": [
+        "Incapacidad jurídica de la mujer casada",
+        "Licencia o permiso marital",
+        "Tutela masculina obligatoria"
+      ],
+      "texto_historico": "La mujer casada tenía limitada su capacidad jurídica: necesitaba la autorización de su marido (la llamada \"licencia marital\") para trabajar, firmar contratos, abrir una cuenta bancaria, administrar bienes u obtener el pasaporte. El Patronato de Protección a la Mujer, organismo estatal creado para \"proteger la moral femenina\", internaba a mujeres jóvenes, madres solteras o consideradas \"díscolas\" sin necesidad de un proceso judicial, y allí se documentan malos tratos y torturas.",
+      "referencia_legal_verificada": "Ley 14/1975, de 2 de mayo, de reforma del Código Civil y del Código de Comercio (deroga la licencia marital); Fuero de los Españoles de 1945; Patronato de Protección a la Mujer, creado en 1941 (activo hasta 1985) (BOE)",
+      "vigencia": "1938-1975 (permiso marital) / 1941-1985 (Patronato de Protección a la Mujer)",
+      "texto_ticket": "La mujer casada necesitaba autorización de un tutor varón para trabajar, tener cuenta bancaria o administrar sus bienes. Quien se apartaba de ese rol podía ser internada por el Patronato de Protección a la Mujer.\nLey 14/1975 / Patronato de Protección a la Mujer (1941-1985)",
+      "texto_ticket_final": "La mujer casada necesitaba autorización de un tutor varón para trabajar, tener cuenta bancaria o administrar sus bienes; quien se apartaba de ese rol podía ser internada por el Patronato de Protección a la Mujer.\nLey 14/1975 / Patronato de Protección a la Mujer (1941-1985)\nLe pasó a Consuelo García del Cid: internada de joven por el Patronato de la Mujer.",
+      "personaje_historico": {
+        "nombre": "Consuelo García del Cid",
+        "descripcion": "Superviviente del Patronato de Protección a la Mujer. Internada de joven en uno de sus centros por \"conducta irregular\" y sometida a malos tratos; hoy es escritora y activista (autora de Las Desamparadas) y ha llevado este testimonio al Congreso.",
+        "consecuencia_breve": "internada de joven por el Patronato de la Mujer"
+      },
+      "personaje_alternativo": null
+    },
+    {
+      "id": "lengua_no_autorizada",
+      "conducta": "UTILIZAR UNA LENGUA NO AUTORIZADA",
+      "nombre_legal": "Uso no autorizado de lenguas cooficiales",
+      "nombres_alternativos": [
+        "Prohibición de lenguas vernáculas/regionales",
+        "Uso no autorizado de lenguas cooficiales",
+        "Represión lingüística"
+      ],
+      "texto_historico": "El franquismo restringió el uso público, educativo y administrativo de las lenguas distintas del castellano (catalán, euskera y gallego), prohibiéndolas en escuelas, administración, medios y rotulación. La apertura comenzó en los últimos días del régimen, con el decreto de 1975 sobre lenguas regionales.",
+      "referencia_legal_verificada": "Decretos y órdenes ministeriales de posguerra (1938-1978) sobre uso de lenguas distintas del castellano; Decreto 2929/1975, de 31 de octubre, sobre uso de las lenguas regionales españolas (BOE / Revistes EAPC)",
+      "vigencia": "1938-1978",
+      "texto_ticket": "El uso público de otras lenguas del Estado estuvo prohibido o restringido durante el régimen.\nDecreto 2929/1975, sobre uso de las lenguas regionales",
+      "texto_ticket_final": "El uso público, educativo o administrativo de otras lenguas del Estado estuvo prohibido o restringido durante el régimen.\nDecreto 2929/1975, sobre uso de las lenguas regionales\nLe pasó a Joan Manuel Serrat: vetado en Eurovisión por defender el catalán.",
+      "personaje_historico": {
+        "nombre": "Joan Manuel Serrat",
+        "descripcion": "Cantautor. En 1968 se le prohibió representar a España en Eurovisión por negarse a cantar exclusivamente en castellano y defender el uso del catalán.",
+        "consecuencia_breve": "vetado en Eurovisión por defender el catalán"
+      },
+      "personaje_alternativo": null
+    }
+  ],
+  "cuestionario": [
+    {
+      "n": 0,
+      "etapa": "Perfil",
+      "id": "PF01",
+      "accion_pregunta": "Seleccionar idioma 🌐",
+      "respuesta_que_activa": "Cualquier idioma que no sea castellano",
+      "conducta_id": "lengua_no_autorizada",
+      "categoria_nombre_legal": "06 — Uso no autorizado de lenguas cooficiales"
+    },
+    {
+      "n": 1,
+      "etapa": "Perfil",
+      "id": "PF02",
+      "accion_pregunta": "Seleccionar género 🚻",
+      "respuesta_que_activa": "Mujer",
+      "conducta_id": "actuar_sin_autorizacion",
+      "categoria_nombre_legal": "05 — Tutela masculina obligatoria"
+    },
+    {
+      "n": 2,
+      "etapa": "Selección",
+      "id": "S01",
+      "accion_pregunta": "Besarte en público 💏",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 3,
+      "etapa": "Selección",
+      "id": "S02",
+      "accion_pregunta": "Salir del armario 🏳️",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 4,
+      "etapa": "Selección",
+      "id": "S03",
+      "accion_pregunta": "Escuchar a Bad Bunny 🧍",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "contenidos_no_autorizados",
+      "categoria_nombre_legal": "04 — Publicaciones o material no autorizado"
+    },
+    {
+      "n": 5,
+      "etapa": "Selección",
+      "id": "S04",
+      "accion_pregunta": "Usar TikTok 📱",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "contenidos_no_autorizados",
+      "categoria_nombre_legal": "04 — Publicaciones o material no autorizado"
+    },
+    {
+      "n": 6,
+      "etapa": "Selección",
+      "id": "S05",
+      "accion_pregunta": "Hacer huelga ✊",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "participar_manifestaciones",
+      "categoria_nombre_legal": "02 — Alteración del orden público"
+    },
+    {
+      "n": 7,
+      "etapa": "Selección",
+      "id": "S06",
+      "accion_pregunta": "Ir a una manifestación 🏛️",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "participar_manifestaciones",
+      "categoria_nombre_legal": "02 — Alteración del orden público"
+    },
+    {
+      "n": 8,
+      "etapa": "Selección",
+      "id": "S07",
+      "accion_pregunta": "Comprar preservativos 🛡️",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 9,
+      "etapa": "Selección",
+      "id": "S08",
+      "accion_pregunta": "Viajar ✈️",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "actuar_sin_autorizacion",
+      "categoria_nombre_legal": "05 — Tutela masculina obligatoria"
+    },
+    {
+      "n": 10,
+      "etapa": "Selección",
+      "id": "S09",
+      "accion_pregunta": "Tener cuenta bancaria 🏦",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "actuar_sin_autorizacion",
+      "categoria_nombre_legal": "05 — Tutela masculina obligatoria"
+    },
+    {
+      "n": 11,
+      "etapa": "Selección",
+      "id": "S10",
+      "accion_pregunta": "Trabajar 💼",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "actuar_sin_autorizacion",
+      "categoria_nombre_legal": "05 — Tutela masculina obligatoria"
+    },
+    {
+      "n": 12,
+      "etapa": "Selección",
+      "id": "S11",
+      "accion_pregunta": "Divorciarte 💔",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "actuar_sin_autorizacion",
+      "categoria_nombre_legal": "05 — Tutela masculina obligatoria"
+    },
+    {
+      "n": 13,
+      "etapa": "Selección",
+      "id": "S12",
+      "accion_pregunta": "Vestir como quieras 👗",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 14,
+      "etapa": "Selección",
+      "id": "S13",
+      "accion_pregunta": "Usar bikini 🩱",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 15,
+      "etapa": "Selección",
+      "id": "S14",
+      "accion_pregunta": "Bailar reggaeton 🔥",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "contenidos_no_autorizados",
+      "categoria_nombre_legal": "04 — Publicaciones o material no autorizado"
+    },
+    {
+      "n": 16,
+      "etapa": "Selección",
+      "id": "S15",
+      "accion_pregunta": "Mandar una nude 🔞",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 17,
+      "etapa": "Selección",
+      "id": "S16",
+      "accion_pregunta": "Usar app de citas 💘",
+      "respuesta_que_activa": "Selecciona / No",
+      "conducta_id": "conductas_inmorales",
+      "categoria_nombre_legal": "03 — Faltas contra la moral y las buenas costumbres"
+    },
+    {
+      "n": 18,
+      "etapa": "Pregunta",
+      "id": "P01",
+      "accion_pregunta": "¿Has compartido algún contenido de política en tus redes sociales?",
+      "respuesta_que_activa": "Sí / No",
+      "conducta_id": "criticar_regimen",
+      "categoria_nombre_legal": "01 — Injurias o desacato a las instituciones"
+    },
+    {
+      "n": 19,
+      "etapa": "Pregunta",
+      "id": "P02",
+      "accion_pregunta": "¿Dejarías que otra persona decidiera siempre por ti?",
+      "respuesta_que_activa": "Sí / No",
+      "conducta_id": "actuar_sin_autorizacion",
+      "categoria_nombre_legal": "05 — Tutela masculina obligatoria"
+    },
+    {
+      "n": 20,
+      "etapa": "Pregunta",
+      "id": "P03",
+      "accion_pregunta": "¿Cuánto valoras tu privacidad?",
+      "respuesta_que_activa": "1–5",
+      "conducta_id": null,
+      "categoria_nombre_legal": null
+    },
+    {
+      "n": 21,
+      "etapa": "Pregunta",
+      "id": "P04",
+      "accion_pregunta": "¿Votarás en las elecciones del próximo año?",
+      "respuesta_que_activa": "Sí / No",
+      "conducta_id": null,
+      "categoria_nombre_legal": null
+    }
+  ]
+}
